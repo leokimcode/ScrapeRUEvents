@@ -47,17 +47,21 @@ all_dates = page_soup.findAll("div", {"style" : "white-space: nowrap; text-overf
 all_hosts = page_soup.findAll("span", {"style" : "width: 91%; display: inline-block; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;"})
 
 #finds all links (sorta, currently buggy need to remove first and last few)
-all_links = page_soup.select("a", {"style" : "text-decoration: none;"})
+events_div = page_soup.find('div', id='event-discovery-list')
+
 
 """
     Storing the information in appropriate arrays
 """
 
 #printing all the links currently working on
-for link in all_links:
-    print(link['href'])
-    event_links.append(link['href'])
-print(event_links)
+aTags = events_div.find_all('a')
+for a in aTags:
+    print(a['href']) # your event href is here
+    urlfront = "connectru.ryerson.ca"
+    event_links.append(urlfront + a['href'])
+
+    
 
 for event in all_events:
     event_titles.append(event.text)
@@ -76,10 +80,16 @@ book = xlwt.Workbook()
 
 sheet1 = book.add_sheet("Sheet 1", cell_overwrite_ok = True)
 
+sheet1.write(0, 0, "Title")
+sheet1.write(0, 1, "Date/Time")
+sheet1.write(0, 2, "Host")
+sheet1.write(0, 3, "Link")
+
 for event_title in all_events:
-    sheet1.write(i, 0, event_titles[i])
-    sheet1.write(i, 1, event_dates[i])
-    sheet1.write(i, 2, event_hosts[i])
+    sheet1.write(i+1, 0, event_titles[i])
+    sheet1.write(i+1, 1, event_dates[i])
+    sheet1.write(i+1, 2, event_hosts[i])
+    sheet1.write(i+1, 3, event_links[i])
     i = i+1
     
 book.save("test.xls")
