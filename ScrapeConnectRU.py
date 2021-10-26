@@ -4,19 +4,40 @@ from bs4 import BeautifulSoup as soup
 from selenium import webdriver
 import requests
 import re
+import xlwt
+
+"""
+    Intance variables
+"""
+#counter for the excel sheet
+i = 0
+
+#arrays to hold the desired values
+event_titles = []
+event_dates = []
+event_hosts = []
+event_links = []
 
 
+"""
+    Setting up driver and link
+"""
+#using Chrome as web driver
 driver = webdriver.Chrome()
 
 #website link
 url = "https://connectru.ryerson.ca/events"
 
+#web driver accesses and stores the information from url
 driver.get(url)
-
 page = driver.page_source
 page_soup = soup(page, 'html.parser')
 
-#finds all events within the specified divisions
+"""
+    Finding the desired tags for events
+"""
+
+#finds all events titles
 all_events = page_soup.findAll("h3", {"style" : "font-size: 17px; font-weight: 600; overflow: hidden; margin: 2px 0px 5px; line-height: 20px; display: -webkit-box; max-width: 400px; -webkit-line-clamp: 2; -webkit-box-orient: vertical; text-overflow: ellipsis;"})
 
 #finds all dates
@@ -28,11 +49,15 @@ all_hosts = page_soup.findAll("span", {"style" : "width: 91%; display: inline-bl
 #finds all links (sorta, currently buggy need to remove first and last few)
 all_links = page_soup.select("a", {"style" : "text-decoration: none;"})
 
-event_titles = []
-event_dates = []
-event_hosts = []
-event_links = []
+"""
+    Storing the information in appropriate arrays
+"""
 
+#printing all the links currently working on
+for link in all_links:
+    print(link['href'])
+    event_links.append(link['href'])
+print(event_links)
 
 for event in all_events:
     event_titles.append(event.text)
@@ -43,17 +68,9 @@ for date in all_dates:
 for host in all_hosts:
     event_hosts.append(host.text)
 
-""" #printing all the links currently working on
-for link in all_links:
-    print(link['href'])
-    event_links.append(link['href'])
-print(event_links) """
-
-""" Exporting the data onto an excel File"""
-
-import xlwt
-
-i = 0
+""" 
+    Exporting the data onto an excel File
+"""
 
 book = xlwt.Workbook()
 
@@ -65,5 +82,4 @@ for event_title in all_events:
     sheet1.write(i, 2, event_hosts[i])
     i = i+1
     
-
 book.save("test.xls")
