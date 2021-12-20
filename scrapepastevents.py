@@ -18,6 +18,9 @@ event_dates = []
 event_hosts = []
 event_links = []
 
+test_list = ["SLG", "Learning"]
+
+test_dict = {'learning':test_list} # add more items to the dictionary
 
 """
     Setting up driver and link
@@ -88,4 +91,20 @@ for event_title in all_events:
     sheet1.write(i, 3, event_links[i])
     i = i+1
     
-book.save("past.xls")
+#book.save("past.xls")
+
+import pandas as pd
+
+print(event_titles)
+
+dict_df = {'titles':event_titles, 'dates': event_dates, 'hosts':event_hosts,'links':event_links}
+titles = pd.DataFrame(dict_df)
+titles['categories'] = 'unknown'
+
+# looking through dictionary keys to look for certain words defined in line 21
+
+for i in test_dict.keys():
+    for x in test_dict[i]:
+            titles['categories'][titles['titles'].str.contains(x)] = i
+
+print(titles)
