@@ -26,7 +26,7 @@ event_links = []
 driver = webdriver.Chrome()
 
 #website link
-url = "https://connectru.ryerson.ca/events"
+url = "https://connectru.ryerson.ca/events?showpastevents=true"
 
 #web driver accesses and stores the information from url
 driver.get(url)
