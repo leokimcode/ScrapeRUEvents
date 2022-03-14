@@ -34,7 +34,7 @@ page = driver.page_source
 page_soup = soup(page, 'html.parser')
 
 """
-    Finding the desired tags for events
+Finding the desired tags for events
 """
 
 #finds all events titles
@@ -57,11 +57,8 @@ events_div = page_soup.find('div', id='event-discovery-list')
 #printing all the links currently working on
 aTags = events_div.find_all('a')
 for a in aTags:
-    print(a['href']) # your event href is here
     urlfront = "connectru.ryerson.ca"
     event_links.append(urlfront + a['href'])
-
-    
 
 for event in all_events:
     event_titles.append(event.text)
@@ -73,7 +70,7 @@ for host in all_hosts:
     event_hosts.append(host.text)
 
 """ 
-    Exporting the data onto an excel File
+Exporting the data onto an excel File
 """
 
 book = xlwt.Workbook()
@@ -91,5 +88,5 @@ for event_title in all_events:
     sheet1.write(i+1, 2, event_hosts[i])
     sheet1.write(i+1, 3, event_links[i])
     i = i+1
-    
+
 book.save("test.xls")
